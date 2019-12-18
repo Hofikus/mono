@@ -3258,6 +3258,60 @@ MONO_SIG_HANDLER_FUNC (, mono_sigill_signal_handler)
 
 }
 
+MONO_SIG_HANDLER_FUNC (, mono_sigtrap_signal_handler)
+{
+	MonoContext mctx;
+	MONO_SIG_HANDLER_INFO_TYPE *info = MONO_SIG_HANDLER_GET_INFO ();
+	MONO_SIG_HANDLER_GET_CONTEXT;
+
+	if (mono_runtime_get_no_exec ())
+		exit (1);
+
+	mono_sigctx_to_monoctx (ctx, &mctx);
+	if (mono_dump_start ())
+		mono_handle_native_crash ("SIGTRAP", &mctx, info);
+	if (mono_do_crash_chaining) {
+		mono_chain_signal (MONO_SIG_HANDLER_PARAMS);
+		return;
+	}
+}
+
+MONO_SIG_HANDLER_FUNC (, mono_sigsys_signal_handler)
+{
+	MonoContext mctx;
+	MONO_SIG_HANDLER_INFO_TYPE *info = MONO_SIG_HANDLER_GET_INFO ();
+	MONO_SIG_HANDLER_GET_CONTEXT;
+
+	if (mono_runtime_get_no_exec ())
+		exit (1);
+
+	mono_sigctx_to_monoctx (ctx, &mctx);
+	if (mono_dump_start ())
+		mono_handle_native_crash ("SIGSYS", &mctx, info);
+	if (mono_do_crash_chaining) {
+		mono_chain_signal (MONO_SIG_HANDLER_PARAMS);
+		return;
+	}
+}
+
+MONO_SIG_HANDLER_FUNC (, mono_sigemt_signal_handler)
+{
+	MonoContext mctx;
+	MONO_SIG_HANDLER_INFO_TYPE *info = MONO_SIG_HANDLER_GET_INFO ();
+	MONO_SIG_HANDLER_GET_CONTEXT;
+
+	if (mono_runtime_get_no_exec ())
+		exit (1);
+
+	mono_sigctx_to_monoctx (ctx, &mctx);
+	if (mono_dump_start ())
+		mono_handle_native_crash ("SIGEMT", &mctx, info);
+	if (mono_do_crash_chaining) {
+		mono_chain_signal (MONO_SIG_HANDLER_PARAMS);
+		return;
+	}
+}
+
 #if defined(MONO_ARCH_USE_SIGACTION) || defined(HOST_WIN32)
 
 #define HAVE_SIG_INFO
